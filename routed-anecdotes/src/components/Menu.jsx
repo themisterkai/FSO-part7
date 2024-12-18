@@ -62,4 +62,6 @@ export default Menu;
 Menu.propTypes = {
   anecdotes: PropTypes.arrayOf(PropTypes.object).isRequired,
   addNew: PropTypes.func,
+  notification: PropTypes.string.isRequired,
+  setNotification: PropTypes.func.isRequired,
 };
