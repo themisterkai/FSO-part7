@@ -21,6 +21,7 @@ const BlogList = () => {
   const blogs = result.data;
   return (
     <>
+      <h2>blogs</h2>
       {blogs.map(blog => (
         <Blog blog={blog} key={blog.id} />
       ))}

@@ -1,12 +1,38 @@
-import PropTypes from 'prop-types';
+import loginServices from '../services/login';
+import { userLogin, useUserDispatch } from '../UserContext';
+import {
+  displayNotification,
+  displayNotificationError,
+  useNotificationDispatch,
+} from '../NotificationContext';
+import { useState } from 'react';
 
-const Login = ({
-  handleLogin,
-  username,
-  setUsername,
-  password,
-  setPassword,
-}) => {
+const Login = () => {
+  const userDispatch = useUserDispatch();
+  const notificationDispatch = useNotificationDispatch();
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async event => {
+    event.preventDefault();
+
+    try {
+      const userFromLogin = await loginServices.login({
+        username,
+        password,
+      });
+      userDispatch(userLogin(userFromLogin));
+      setUsername('');
+      setPassword('');
+      notificationDispatch(
+        displayNotification(`${userFromLogin.name} successfully logged in`)
+      );
+    } catch (e) {
+      notificationDispatch(displayNotificationError(e.response.data.error));
+    }
+  };
+
   return (
     <>
       <h2>log in to applicaton</h2>
@@ -40,10 +66,3 @@ const Login = ({
 export default Login;
 
 Login.displayName = 'Login';
-Login.propTypes = {
-  handleLogin: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  setUsername: PropTypes.func.isRequired,
-  password: PropTypes.string.isRequired,
-  setPassword: PropTypes.func.isRequired,
-};

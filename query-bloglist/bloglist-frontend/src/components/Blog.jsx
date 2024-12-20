@@ -8,8 +8,10 @@ import {
   displayNotificationError,
   useNotificationDispatch,
 } from '../NotificationContext';
+import { useUserValue } from '../UserContext';
 
-const Blog = ({ blog, handleRemove, username }) => {
+const Blog = ({ blog }) => {
+  const { username } = useUserValue();
   const queryClient = useQueryClient();
   const notificationDispatch = useNotificationDispatch();
 
@@ -100,11 +102,11 @@ const Blog = ({ blog, handleRemove, username }) => {
             {blog.likes} <button onClick={addLike}>like</button>
           </div>
           {blog.user && <div>{blog.user.name}</div>}
-          {/* {username === blog.username && ( */}
-          <div>
-            <button onClick={confirmDelete}>remove</button>
-          </div>
-          {/* )} */}
+          {blog.user && username === blog.user.username && (
+            <div>
+              <button onClick={confirmDelete}>remove</button>
+            </div>
+          )}
         </>
       )}
     </div>
@@ -116,6 +118,4 @@ export default Blog;
 Blog.displayName = 'Blog';
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  // handleLikes: PropTypes.func.isRequired,
-  // handleRemove: PropTypes.func.isRequired,
 };
