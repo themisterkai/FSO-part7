@@ -22,7 +22,7 @@ const BlogList = () => {
   return (
     <>
       {blogs.map(blog => (
-        <Blog blog={blog} />
+        <Blog blog={blog} key={blog.id} />
       ))}
     </>
   );

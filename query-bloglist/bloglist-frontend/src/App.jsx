@@ -69,21 +69,6 @@ const App = () => {
     }
   };
 
-  const handleLikes = async (id, blogObject) => {
-    try {
-      const updatedBlog = await blogService.update(id, blogObject);
-      // setBlogs(
-      //   sortBlog(blogs.map(blog => (blog.id === id ? updatedBlog : blog)))
-      // );
-      notificationDispatch(
-        displayNotification(
-          `1 like for ${blogObject.title} by ${blogObject.author} added`
-        )
-      );
-    } catch (e) {
-      notificationDispatch(displayNotificationError(e.response.data.error));
-    }
-  };
 
   const handleRemove = async blogObject => {
     try {

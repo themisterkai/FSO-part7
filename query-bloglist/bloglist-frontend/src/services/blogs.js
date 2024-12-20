@@ -33,13 +33,20 @@ const create = async blogObject => {
   return response.data;
 };
 
-const update = async (id, blogObject) => {
-  const response = await axios.put(`${baseUrl}/${id}`, blogObject, getConfig());
+const update = async blogObject => {
+  const response = await axios.put(
+    `${baseUrl}/${blogObject.id}`,
+    blogObject,
+    getConfig()
+  );
   return response.data;
 };
 
-const remove = async id => {
-  const response = await axios.delete(`${baseUrl}/${id}`, getConfig());
+const remove = async blogObject => {
+  const response = await axios.delete(
+    `${baseUrl}/${blogObject.id}`,
+    getConfig()
+  );
   return response.data;
 };
 

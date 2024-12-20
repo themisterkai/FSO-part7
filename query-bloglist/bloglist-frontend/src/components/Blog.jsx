@@ -1,7 +1,18 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-const Blog = ({ blog, handleLikes, handleRemove, username }) => {
+import blogService from '../services/blogs';
+import {
+  displayNotification,
+  displayNotificationError,
+  useNotificationDispatch,
+} from '../NotificationContext';
+
+const Blog = ({ blog, handleRemove, username }) => {
+  const queryClient = useQueryClient();
+  const notificationDispatch = useNotificationDispatch();
+
   const [isVisible, setIsVisible] = useState(false);
   const handleSetIsVisible = event => {
     event.preventDefault();
@@ -17,16 +28,8 @@ const Blog = ({ blog, handleLikes, handleRemove, username }) => {
   };
 
   const addLike = () => {
-    const blogObject = {
-      likes: blog.likes + 1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
-    };
-    if (blog.user != null) {
-      blogObject.user = blog.user.id;
-    }
-    handleLikes(blog.id, blogObject);
+    const { user, ...blogObject } = blog;
+    likeBlogMutation.mutate({ ...blogObject, likes: blogObject.likes + 1 });
   };
 
   const confirmDelete = () => {
@@ -34,9 +37,53 @@ const Blog = ({ blog, handleLikes, handleRemove, username }) => {
       `Are you sure you want to delete ${blog.title} by ${blog.author}?`
     );
     if (userConfirmed) {
-      handleRemove(blog);
+      deleteBlogMutation.mutate(blog);
     }
   };
+
+  const likeBlogMutation = useMutation({
+    mutationFn: blogService.update,
+    onSuccess: blog => {
+      notificationDispatch(
+        displayNotification(`1 like for ${blog.title} by ${blog.author} added`)
+      );
+      const blogs = queryClient.getQueryData(['blogs']);
+      queryClient.setQueryData(
+        ['blogs'],
+        blogs.map(b => (b.id === blog.id ? blog : b))
+      );
+    },
+    onError: error => {
+      notificationDispatch(
+        displayNotificationError(
+          error.response != null ? error.response.data.error : error.message
+        )
+      );
+    },
+  });
+
+  const deleteBlogMutation = useMutation({
+    mutationFn: blogService.remove,
+    onSuccess: (response, removedBlog) => {
+      notificationDispatch(
+        displayNotification(
+          `${removedBlog.title} by ${removedBlog.author} removed`
+        )
+      );
+      const blogs = queryClient.getQueryData(['blogs']);
+      queryClient.setQueryData(
+        ['blogs'],
+        blogs.filter(blog => blog.id !== removedBlog.id)
+      );
+    },
+    onError: error => {
+      notificationDispatch(
+        displayNotificationError(
+          error.response != null ? error.response.data.error : error.message
+        )
+      );
+    },
+  });
 
   return (
     <div className="blog" style={blogStyle}>
@@ -53,11 +100,11 @@ const Blog = ({ blog, handleLikes, handleRemove, username }) => {
             {blog.likes} <button onClick={addLike}>like</button>
           </div>
           {blog.user && <div>{blog.user.name}</div>}
-          {username === blog.user.name && (
-            <div>
-              <button onClick={confirmDelete}>remove</button>
-            </div>
-          )}
+          {/* {username === blog.username && ( */}
+          <div>
+            <button onClick={confirmDelete}>remove</button>
+          </div>
+          {/* )} */}
         </>
       )}
     </div>
@@ -68,8 +115,7 @@ export default Blog;
 
 Blog.displayName = 'Blog';
 Blog.propTypes = {
-  username: PropTypes.string.isRequired,
   blog: PropTypes.object.isRequired,
-  handleLikes: PropTypes.func.isRequired,
-  handleRemove: PropTypes.func.isRequired,
+  // handleLikes: PropTypes.func.isRequired,
+  // handleRemove: PropTypes.func.isRequired,
 };
