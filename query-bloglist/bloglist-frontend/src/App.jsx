@@ -11,15 +11,13 @@ import {
   displayNotificationError,
   useNotificationDispatch,
 } from './NotificationContext';
+import BlogList from './components/BlogList';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
   const notificationDispatch = useNotificationDispatch();
-
-  const blogsFormRef = useRef();
 
   useEffect(() => {
     const loggedInUser = window.localStorage.getItem('loggedInUser');
@@ -30,11 +28,7 @@ const App = () => {
     }
   }, []);
 
-  useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(sortBlog(blogs)));
-  }, [user]);
-
-  const sortBlog = blogs => blogs.sort((a, b) => b.likes - a.likes);
+  const blogsFormRef = useRef();
 
   const handleLogin = async event => {
     event.preventDefault();
@@ -64,7 +58,7 @@ const App = () => {
     try {
       const newBlog = await blogService.create(blogObject);
       blogsFormRef.current.toggleVisibility();
-      setBlogs([...blogs, newBlog]);
+      // setBlogs([...blogs, newBlog]);
       notificationDispatch(
         displayNotification(
           `a new blog ${blogObject.title} by ${blogObject.author} added`
@@ -78,9 +72,9 @@ const App = () => {
   const handleLikes = async (id, blogObject) => {
     try {
       const updatedBlog = await blogService.update(id, blogObject);
-      setBlogs(
-        sortBlog(blogs.map(blog => (blog.id === id ? updatedBlog : blog)))
-      );
+      // setBlogs(
+      //   sortBlog(blogs.map(blog => (blog.id === id ? updatedBlog : blog)))
+      // );
       notificationDispatch(
         displayNotification(
           `1 like for ${blogObject.title} by ${blogObject.author} added`
@@ -94,7 +88,7 @@ const App = () => {
   const handleRemove = async blogObject => {
     try {
       await blogService.remove(blogObject.id);
-      setBlogs(sortBlog(blogs.filter(blog => blog.id !== blogObject.id)));
+      // setBlogs(sortBlog(blogs.filter(blog => blog.id !== blogObject.id)));
       notificationDispatch(
         displayNotification(
           `${blogObject.title} by ${blogObject.author} removed`
@@ -134,15 +128,7 @@ const App = () => {
             <AddBlog handleAdd={handleAdd} />
           </Togglable>
           <h2>blogs</h2>
-          {blogs.map(blog => (
-            <Blog
-              username={user.name}
-              key={blog.id}
-              blog={blog}
-              handleLikes={handleLikes}
-              handleRemove={handleRemove}
-            />
-          ))}
+          <BlogList />
         </div>
       )}
     </div>

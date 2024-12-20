@@ -11,7 +11,19 @@ const setToken = newToken => {
   token = `Bearer ${newToken}`;
 };
 
+const getTokenFromLS = async () => {
+  const loggedInUser = window.localStorage.getItem('loggedInUser');
+  if (loggedInUser) {
+    const userFromLS = JSON.parse(loggedInUser);
+    setToken(userFromLS.token);
+  }
+};
+
 const getAll = async () => {
+  if (token === '') {
+    await getTokenFromLS();
+  }
+  console.log('********', token);
   const response = await axios.get(baseUrl, getConfig());
   return response.data;
 };
