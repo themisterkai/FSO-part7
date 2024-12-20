@@ -1,13 +1,10 @@
 import { useEffect, useRef } from 'react';
-// import AddBlog from './components/AddBlog';
 import Notification from './components/Notification';
 
-// import Togglable from './components/Toggable';
-// import BlogList from './components/BlogList';
 import { userLogin, useUserDispatch, useUserValue } from './UserContext';
 import Header from './components/Header';
 import RoutesComponent from './components/Routes';
-import ToggableCreate from './components/ToggableCreate';
+import Navigation from './components/Navigation';
 
 const App = () => {
   const userDispatch = useUserDispatch();
@@ -21,21 +18,11 @@ const App = () => {
     }
   }, []);
 
-  // const blogsFormRef = useRef();
-
   return (
     <div>
-      <Notification />
       <Header />
-      {user != null && (
-        <>
-          <ToggableCreate />
-          {/* <Togglable buttonLabel="create" ref={blogsFormRef}>
-            <AddBlog />
-          </Togglable> */}
-          <RoutesComponent />
-        </>
-      )}
+      <Notification />
+      {user != null && <RoutesComponent />}
     </div>
   );
 };

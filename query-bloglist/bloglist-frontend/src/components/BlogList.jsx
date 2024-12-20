@@ -2,6 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import Blog from './Blog';
 import blogService from '../services/blogs';
 import { Link } from 'react-router-dom';
+import Togglable from './Toggable';
+import AddBlog from './AddBlog';
+import ToggableCreate from './ToggableCreate';
 
 const BlogList = () => {
   const result = useQuery({
@@ -31,7 +34,7 @@ const BlogList = () => {
 
   return (
     <>
-      <h2>blogs</h2>
+      <ToggableCreate />
       {blogs.map(blog => (
         <div style={blogStyle} key={blog.id}>
           <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
