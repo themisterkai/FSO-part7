@@ -1,12 +1,22 @@
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import App from './App';
 import './index.css';
 import { NotificationContextProvider } from './NotificationContext';
 import { UserContextProvider } from './UserContext';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // Set staleTime globally
+      cacheTime: 1000 * 60 * 60, // Set cacheTime globally
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  },
+});
 
 const combineContexts = contexts => {
   return ({ children }) => {
@@ -24,11 +34,12 @@ const AllContexts = combineContexts([
   UserContextProvider,
 ]);
 
-
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <QueryClientProvider client={queryClient}>
-    <AllContexts>
-      <App />
-    </AllContexts>
-  </QueryClientProvider>
+  <Router>
+    <QueryClientProvider client={queryClient}>
+      <AllContexts>
+        <App />
+      </AllContexts>
+    </QueryClientProvider>
+  </Router>
 );
