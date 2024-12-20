@@ -7,14 +7,28 @@ import { NotificationContextProvider } from './NotificationContext';
 import { UserContextProvider } from './UserContext';
 
 const queryClient = new QueryClient();
-NotificationContextProvider;
+
+const combineContexts = contexts => {
+  return ({ children }) => {
+    return contexts.reduceRight(
+      (accumulatedContext, CurrentContext) => (
+        <CurrentContext>{accumulatedContext}</CurrentContext>
+      ),
+      children
+    );
+  };
+};
+
+const AllContexts = combineContexts([
+  NotificationContextProvider,
+  UserContextProvider,
+]);
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <QueryClientProvider client={queryClient}>
-    <NotificationContextProvider>
-      <UserContextProvider>
-        <App />
-      </UserContextProvider>
-    </NotificationContextProvider>
+    <AllContexts>
+      <App />
+    </AllContexts>
   </QueryClientProvider>
 );
