@@ -108,7 +108,11 @@ const Blog = () => {
       <div>
         {blog.likes} likes <button onClick={addLike}>like</button>
       </div>
-      {blog.user && <div>added by {blog.user.name}</div>}
+      {blog.user && (
+        <div>
+          added by <Link to={`/users/${blog.user.id}`}>{blog.user.name}</Link>
+        </div>
+      )}
       {blog.user && username === blog.user.username && (
         <div>
           <button onClick={confirmDelete}>remove</button>

@@ -1,0 +1,5 @@
+.disabled-link {
+  pointer-events: none; /* Makes the link non-clickable */
+  color: gray; /* Changes the text color */
+  text-decoration: none; /* Removes underline */
+}

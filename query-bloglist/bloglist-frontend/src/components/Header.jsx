@@ -4,6 +4,7 @@ import {
 } from '../NotificationContext';
 import { userLogoff, useUserDispatch, useUserValue } from '../UserContext';
 import Login from './Login';
+import Navigation from './Navigation';
 
 const Header = () => {
   const userDispatch = useUserDispatch();
@@ -20,13 +21,9 @@ const Header = () => {
 
   return (
     <>
+      {user != null && <Navigation />}
+      <h1>blogs</h1>
       {user == null && <Login />}
-      {user != null && (
-        <div>
-          <div>{user.name} logged in</div>
-          <button onClick={handleLogout}>logout</button>
-        </div>
-      )}
     </>
   );
 };

@@ -7,12 +7,10 @@ import Togglable from './Toggable';
 const ToggableCreate = () => {
   const blogsFormRef = useRef();
 
-  const location = useLocation();
-
   // Only render CreateBlog if the current path is '/'
-  if (location.pathname !== '/') {
-    return null; // You can return null or any other component you'd like for other paths
-  }
+  // if (location.pathname !== '/' && location.pathname !== '/blogs') {
+  //   return null; // You can return null or any other component you'd like for other paths
+  // }
 
   return (
     <Togglable buttonLabel="create" ref={blogsFormRef}>
