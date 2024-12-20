@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Blog from './Blog';
 import blogService from '../services/blogs';
+import { Link } from 'react-router-dom';
 
 const BlogList = () => {
   const result = useQuery({
@@ -15,15 +16,26 @@ const BlogList = () => {
   }
 
   if (result.isError) {
-    return <div>note service is not available due to problems in server</div>;
+    return <div>blog service is not available due to problems in server</div>;
   }
 
   const blogs = result.data;
+
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5,
+  };
+
   return (
     <>
       <h2>blogs</h2>
       {blogs.map(blog => (
-        <Blog blog={blog} key={blog.id} />
+        <div style={blogStyle} key={blog.id}>
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+        </div>
       ))}
     </>
   );

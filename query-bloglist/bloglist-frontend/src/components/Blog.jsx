@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import blogService from '../services/blogs';
 import {
@@ -10,24 +11,33 @@ import {
 } from '../NotificationContext';
 import { useUserValue } from '../UserContext';
 
-const Blog = ({ blog }) => {
+const Blog = () => {
+  const { id } = useParams();
   const { username } = useUserValue();
   const queryClient = useQueryClient();
   const notificationDispatch = useNotificationDispatch();
 
-  const [isVisible, setIsVisible] = useState(false);
-  const handleSetIsVisible = event => {
-    event.preventDefault();
-    setIsVisible(!isVisible);
-  };
+  const result = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll,
+    retry: 1,
+  });
+  console.log(JSON.parse(JSON.stringify(result)));
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  };
+  if (result.isLoading) {
+    return <div>loading data...</div>;
+  }
+
+  if (result.isError) {
+    return <div>blog service is not available due to problems in server</div>;
+  }
+
+  const blogs = result.data;
+  const blog = blogs.find(b => b.id === id);
+
+  if (!blog) {
+    return <div>blog not found</div>;
+  }
 
   const addLike = () => {
     const { user, ...blogObject } = blog;
@@ -88,26 +98,21 @@ const Blog = ({ blog }) => {
   });
 
   return (
-    <div className="blog" style={blogStyle}>
+    <div className="blog">
       <div>
-        {blog.title} {blog.author}{' '}
-        <button onClick={handleSetIsVisible}>
-          {isVisible ? 'hide' : 'view'}
-        </button>
+        <h2>
+          {blog.title} by {blog.author}{' '}
+        </h2>
       </div>
-      {isVisible && (
-        <>
-          <div>{blog.url}</div>
-          <div>
-            {blog.likes} <button onClick={addLike}>like</button>
-          </div>
-          {blog.user && <div>{blog.user.name}</div>}
-          {blog.user && username === blog.user.username && (
-            <div>
-              <button onClick={confirmDelete}>remove</button>
-            </div>
-          )}
-        </>
+      <div>{blog.url}</div>
+      <div>
+        {blog.likes} likes <button onClick={addLike}>like</button>
+      </div>
+      {blog.user && <div>added by {blog.user.name}</div>}
+      {blog.user && username === blog.user.username && (
+        <div>
+          <button onClick={confirmDelete}>remove</button>
+        </div>
       )}
     </div>
   );
@@ -116,6 +121,3 @@ const Blog = ({ blog }) => {
 export default Blog;
 
 Blog.displayName = 'Blog';
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-};

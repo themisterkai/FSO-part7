@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import userService from '../services/users';
 import { useParams } from 'react-router-dom';
+
+import userService from '../services/users';
 
 const User = () => {
   const { id } = useParams();
