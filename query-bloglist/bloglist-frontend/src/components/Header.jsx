@@ -1,6 +1,7 @@
 import { useUserValue } from '../UserContext';
 import Login from './Login';
 import Navigation from './Navigation';
+import Notification from './Notification';
 
 const Header = () => {
   const user = useUserValue();
@@ -8,6 +9,7 @@ const Header = () => {
   return (
     <>
       {user != null && <Navigation />}
+      <Notification />
       <h1>blogs</h1>
       {user == null && <Login />}
     </>
