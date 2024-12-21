@@ -49,6 +49,16 @@ const remove = async blogObject => {
   return response.data;
 };
 
+const addComment = async ({ blogId, comment }) => {
+  console.log('************', comment);
+  const response = await axios.post(
+    `${baseUrl}/${blogId}/comments`,
+    { comment },
+    getConfig()
+  );
+  return response.data;
+};
+
 export default {
   getAll,
   create,
@@ -56,5 +66,6 @@ export default {
   remove,
   setToken,
   getConfig,
+  addComment,
   getTokenFromLS,
 };

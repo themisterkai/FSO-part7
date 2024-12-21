@@ -7,7 +7,6 @@ const Users = () => {
     queryKey: ['users'],
     queryFn: userService.getAll,
     retry: 1,
-    keepPreviousData: true,
   });
   console.log(JSON.parse(JSON.stringify(result)));
 

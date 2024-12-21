@@ -1,4 +1,5 @@
 const blogsRouter = require('express').Router();
+const { default: mongoose } = require('mongoose');
 const Blog = require('../models/blog');
 const User = require('../models/user');
 
@@ -100,6 +101,27 @@ blogsRouter.put('/:id', async (request, response) => {
   });
 
   return response.json(updatedBlog);
+});
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const { comment } = request.body;
+  const userId = request.user._id.toString();
+  const user = await User.findById(userId);
+  if (user == null) {
+    return response.status(401).json({
+      error: 'unauthorized',
+    });
+  }
+
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    request.params.id,
+    { $push: { comments: { comment } } },
+    { new: true }
+  ).populate('user', {
+    username: 1,
+    name: 1,
+  });
+  return response.status(201).json(updatedBlog);
 });
 
 module.exports = blogsRouter;
