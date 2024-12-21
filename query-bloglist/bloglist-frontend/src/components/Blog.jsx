@@ -9,6 +9,7 @@ import {
   useNotificationDispatch,
 } from '../NotificationContext';
 import { useUserValue } from '../UserContext';
+import Comments from './Comments';
 
 const Blog = () => {
   const { id } = useParams();
@@ -117,6 +118,7 @@ const Blog = () => {
           <button onClick={confirmDelete}>remove</button>
         </div>
       )}
+      <Comments blog={blog} />
     </div>
   );
 };
