@@ -58,7 +58,7 @@ const Comments = ({ blog }) => {
       <div>
         <ul>
           {blog.comments &&
-            blog.comments.map(c => <li key={c.id}>{c.comment}</li>)}
+            blog.comments.map(c => <li key={c._id}>{c.comment}</li>)}
         </ul>
       </div>
     </div>

@@ -24,35 +24,6 @@ const Blog = () => {
   });
   console.log(JSON.parse(JSON.stringify(result)));
 
-  if (result.isLoading) {
-    return <div>loading data...</div>;
-  }
-
-  if (result.isError) {
-    return <div>blog service is not available due to problems in server</div>;
-  }
-
-  const blogs = result.data;
-  const blog = blogs.find(b => b.id === id);
-
-  if (!blog) {
-    return <div>blog not found</div>;
-  }
-
-  const addLike = () => {
-    const { user, ...blogObject } = blog;
-    likeBlogMutation.mutate({ ...blogObject, likes: blogObject.likes + 1 });
-  };
-
-  const confirmDelete = () => {
-    const userConfirmed = confirm(
-      `Are you sure you want to delete ${blog.title} by ${blog.author}?`
-    );
-    if (userConfirmed) {
-      deleteBlogMutation.mutate(blog);
-    }
-  };
-
   const likeBlogMutation = useMutation({
     mutationFn: blogService.update,
     onSuccess: blog => {
@@ -96,6 +67,35 @@ const Blog = () => {
       );
     },
   });
+
+  if (result.isLoading) {
+    return <div>loading data...</div>;
+  }
+
+  if (result.isError) {
+    return <div>blog service is not available due to problems in server</div>;
+  }
+
+  const blogs = result.data;
+  const blog = blogs.find(b => b.id === id);
+
+  if (!blog) {
+    return <div>blog not found</div>;
+  }
+
+  const addLike = () => {
+    const { user, ...blogObject } = blog;
+    likeBlogMutation.mutate({ ...blogObject, likes: blogObject.likes + 1 });
+  };
+
+  const confirmDelete = () => {
+    const userConfirmed = confirm(
+      `Are you sure you want to delete ${blog.title} by ${blog.author}?`
+    );
+    if (userConfirmed) {
+      deleteBlogMutation.mutate(blog);
+    }
+  };
 
   return (
     <div className="blog">
