@@ -1,10 +1,8 @@
-import { useEffect, useRef } from 'react';
-import Notification from './components/Notification';
+import { useEffect } from 'react';
 
 import { userLogin, useUserDispatch, useUserValue } from './UserContext';
 import Header from './components/Header';
 import RoutesComponent from './components/Routes';
-import Navigation from './components/Navigation';
 
 const App = () => {
   const userDispatch = useUserDispatch();
@@ -21,7 +19,6 @@ const App = () => {
   return (
     <div>
       <Header />
-      <Notification />
       {user != null && <RoutesComponent />}
     </div>
   );
