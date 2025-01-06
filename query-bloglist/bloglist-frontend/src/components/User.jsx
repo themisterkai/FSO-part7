@@ -26,17 +26,26 @@ const User = () => {
     return <div>user not found</div>;
   }
   return (
-    <>
-      <h2>{user.name}</h2>
-      <h3>added blogs</h3>
-      <ul>
-        {user.blogs.map(blog => (
-          <li key={blog.id}>
-            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-          </li>
-        ))}
-      </ul>
-    </>
+    <div className="max-w-3xl mx-auto bg-gray-100 p-6 rounded shadow mt-6">
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold">{user.name}</h2>
+      </div>
+      <div className="mb-4 mt-10">
+        <h3 className="text-xl font-semibold mb-2">added blogs</h3>
+        <ul className="list-disc pl-5 space-y-2">
+          {user.blogs.map(blog => (
+            <li key={blog.id}>
+              <Link
+                to={`/blogs/${blog.id}`}
+                className="text-teal-700 hover:underline"
+              >
+                {blog.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 };
 export default User;

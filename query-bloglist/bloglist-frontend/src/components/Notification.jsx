@@ -17,8 +17,14 @@ const Notification = () => {
   }
 
   return (
-    <div className={isError ? 'notification isError' : 'notification'}>
-      {message}
+    <div
+      className={
+        isError
+          ? 'flex items-center bg-gray-700 text-white text-sm font-bold px-4 py-3" role="alert"'
+          : 'flex items-center bg-teal-600 text-white text-sm font-bold px-4 py-3" role="alert"'
+      }
+    >
+      <p className="font-bold">{message}</p>
     </div>
   );
 };
