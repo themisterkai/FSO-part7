@@ -41,7 +41,9 @@ const Navigation = () => {
       </NavLink>
       <span style={padding}>Kai logged in</span>
       <span style={padding}>
-        <button onClick={handleLogout}>logout</button>
+        <button className="btn" onClick={handleLogout}>
+          logout
+        </button>
       </span>
     </div>
   );
