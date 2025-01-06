@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import blogService from '../services/blogs';
@@ -16,6 +16,7 @@ const Blog = () => {
   const { username } = useUserValue();
   const queryClient = useQueryClient();
   const notificationDispatch = useNotificationDispatch();
+  const navigate = useNavigate();
 
   const result = useQuery({
     queryKey: ['blogs'],
@@ -58,6 +59,7 @@ const Blog = () => {
         ['blogs'],
         blogs.filter(blog => blog.id !== removedBlog.id)
       );
+      navigate('/blogs');
     },
     onError: error => {
       notificationDispatch(
@@ -98,26 +100,50 @@ const Blog = () => {
   };
 
   return (
-    <div className="blog">
-      <div>
-        <h2>
-          {blog.title} by {blog.author}{' '}
-        </h2>
-      </div>
-      <div>{blog.url}</div>
-      <div>
-        {blog.likes} likes <button onClick={addLike}>like</button>
-      </div>
-      {blog.user && (
-        <div>
-          added by <Link to={`/users/${blog.user.id}`}>{blog.user.name}</Link>
+    <div className="max-w-3xl mx-auto bg-gray-100 p-6 rounded shadow mt-6">
+      <div className="mb-4">
+        <div class="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold">
+            {blog.title} by {blog.author}{' '}
+          </h2>
+          {blog.user && username === blog.user.username && (
+            <div className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700">
+              <button onClick={confirmDelete}>remove</button>
+            </div>
+          )}
         </div>
-      )}
-      {blog.user && username === blog.user.username && (
-        <div>
-          <button onClick={confirmDelete}>remove</button>
-        </div>
-      )}
+        <a
+          href="http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-teal-700 hover:underline"
+        >
+          <div>{blog.url}</div>
+        </a>
+        {blog.user && (
+          <div>
+            added by{' '}
+            <Link
+              to={`/users/${blog.user.id}`}
+              className="text-teal-700 hover:underline"
+            >
+              {blog.user.name}
+            </Link>
+          </div>
+        )}
+      </div>
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-gray-800">
+          {blog.likes} {blog.likes === 1 ? 'like' : 'likes'}{' '}
+        </span>
+        <button
+          onClick={addLike}
+          className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700"
+        >
+          like 👍
+        </button>
+      </div>
+
       <Comments blog={blog} />
     </div>
   );

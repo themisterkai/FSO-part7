@@ -39,26 +39,39 @@ const Comments = ({ blog }) => {
     e.preventDefault();
     newBlogCommentMutation.mutate({ blogId: blog.id, comment });
   };
-  //
+
   return (
-    <div>
-      <h3>comments</h3>
-      <span>
-        <input
-          type="text"
-          value={comment}
-          name="Title"
-          id="title-input"
-          onChange={({ target }) => setComment(target.value)}
-        />
-      </span>
-      <span>
-        <button onClick={handleComments}>add comment</button>
-      </span>
+    <div className="mb-4 mt-10">
+      <h3 className="text-xl font-semibold mb-2">comments</h3>
+      <div className="flex items-center gap-2 mb-4">
+        <span>
+          <input
+            type="text"
+            value={comment}
+            name="Title"
+            id="title-input"
+            className="block min-w-0 w-80 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+            onChange={({ target }) => setComment(target.value)}
+          />
+        </span>
+        <span>
+          <button
+            onClick={handleComments}
+            className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700"
+          >
+            add comment
+          </button>
+        </span>
+      </div>
+
       <div>
-        <ul>
+        <ul className="list-disc pl-5 space-y-2">
           {blog.comments &&
-            blog.comments.map(c => <li key={c._id}>{c.comment}</li>)}
+            blog.comments.map(c => (
+              <li key={c._id} className="text-gray-800">
+                {c.comment}
+              </li>
+            ))}
         </ul>
       </div>
     </div>

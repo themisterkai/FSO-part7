@@ -8,9 +8,8 @@ const Header = () => {
 
   return (
     <>
-      {user != null && <Navigation />}
+      <Navigation />
       <Notification />
-      <h1>blogs</h1>
       {user == null && <Login />}
     </>
   );

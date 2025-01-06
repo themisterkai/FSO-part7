@@ -6,10 +6,12 @@ import {
   useNotificationDispatch,
 } from '../NotificationContext';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const userDispatch = useUserDispatch();
   const notificationDispatch = useNotificationDispatch();
+  const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -28,6 +30,7 @@ const Login = () => {
       notificationDispatch(
         displayNotification(`${userFromLogin.name} successfully logged in`)
       );
+      navigate('/');
     } catch (e) {
       notificationDispatch(displayNotificationError(e.response.data.error));
     }
@@ -72,12 +75,14 @@ const Login = () => {
               onChange={({ target }) => setPassword(target.value)}
             />
           </div>
-          <button
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition duration-300"
-            type="submit"
-          >
-            login
-          </button>
+          <div className="pt-6">
+            <button
+              className="w-full bg-teal-600 text-white p-3 rounded-lg hover:bg-teal-700 focus:ring-4 focus:ring-teal-300 transition duration-300"
+              type="submit"
+            >
+              login
+            </button>
+          </div>
         </form>
       </div>
     </div>
